@@ -4,6 +4,7 @@ import "antd/dist/antd.css";
 import Head from "next/head";
 
 import AppLayout from "../components/AppLayout";
+import wrapper from "../store/configureStore";
 
 function App({ Component, pageProps }: AppProps): any {
 	return (
@@ -29,4 +30,4 @@ App.getInitialProps = async ({
 
 	return { pageProps };
 };
-export default App;
+export default wrapper.withRedux(App);
