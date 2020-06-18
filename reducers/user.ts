@@ -1,5 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const dummyUser = {
+	id: 1,
+	nickname: "제로초",
+	Posts: [],
+	Followings: [],
+	Followers: [],
+};
+
 interface IinitialState {
 	isLoggedIn: boolean; // 로그인 여부
 	isLoggingOut: boolean; // 로그아웃 시도중
@@ -32,10 +40,24 @@ const userSlice = createSlice({
 	name: "user",
 	initialState,
 	reducers: {
-		LOG_IN_REQUEST: (state) => state,
-		LOG_IN_SUCCESS: (state) => state,
-		LOG_IN_FAILURE: (state) => state,
-		LOG_OUT_REQUEST: (state) => state,
+		LOG_IN_REQUEST: (state) => {
+			state.isLoggingIn = true;
+			state.logInErrorReason = "";
+		},
+		LOG_IN_SUCCESS: (state) => {
+			state.isLoggedIn = true;
+			state.me = dummyUser;
+		},
+		LOG_IN_FAILURE: (state, action) => {
+			state.isLoggingIn = false;
+			state.isLoggedIn = false;
+			state.logInErrorReason = action.payload;
+			state.me = null;
+		},
+		LOG_OUT_REQUEST: (state) => {
+			state.isLoggedIn = false;
+			state.me = null;
+		},
 		LOG_OUT_SUCCESS: (state) => state,
 		LOG_OUT_FAILURE: (state) => state,
 		SIGN_UP_REQUEST: (state) => state,
