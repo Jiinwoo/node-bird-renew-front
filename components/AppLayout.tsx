@@ -4,6 +4,7 @@ import { Menu, Input, Row, Col } from "antd";
 import UserProfile from "./UserProfile";
 import LoginForm from "./LoginForm";
 import styled from "styled-components";
+import { useTypedSelector } from "../store/configureStore";
 interface IAppLayoutProps {
 	children: React.ReactNode;
 }
@@ -11,7 +12,7 @@ interface IAppLayoutProps {
 function AppLayout({
 	children,
 }: IAppLayoutProps): FunctionComponentElement<IAppLayoutProps> {
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const { isLoggedIn } = useTypedSelector((state) => state.user);
 	return (
 		<div>
 			<Menu mode={"horizontal"}>
@@ -36,11 +37,7 @@ function AppLayout({
 			</Menu>
 			<Row gutter={8}>
 				<Col xs={24} md={6}>
-					{isLoggedIn ? (
-						<UserProfile setIsLoggedIn={setIsLoggedIn} />
-					) : (
-						<LoginForm setIsLoggedIn={setIsLoggedIn} />
-					)}
+					{isLoggedIn ? <UserProfile /> : <LoginForm />}
 				</Col>
 				<Col xs={24} md={6}>
 					{children}

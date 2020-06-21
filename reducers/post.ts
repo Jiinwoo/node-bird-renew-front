@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface Post {
+export interface Post {
 	id: number;
 	User: {
 		id: number;
@@ -30,7 +30,7 @@ const initialState: IinitialState = {
 				id: 1,
 				nickname: "제로초",
 			},
-			content: "첫 번째 게시글",
+			content: "첫 번째 게시글 #해시태그 #익스프레스",
 			Images: [
 				{
 					src:
@@ -92,8 +92,10 @@ const postSlice = createSlice({
 		ADD_POST: (state, action) => {
 			state.mainPosts.unshift(action.payload);
 		},
-		ADD_DUMMY: (state) => state,
+		ADD_DUMMY: (state) => {
+			state.mainPosts.unshift(dummyPost);
+		},
 	},
 });
-export const {ADD_POST,ADD_DUMMY} = postSlice.actions;
+export const { ADD_POST, ADD_DUMMY } = postSlice.actions;
 export default postSlice.reducer;

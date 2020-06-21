@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { Post } from "./post";
 
 const dummyUser = {
 	id: 1,
@@ -8,6 +9,14 @@ const dummyUser = {
 	Followers: [],
 };
 
+export interface IUser {
+	id: number;
+	nickname: string;
+	Posts: Post[];
+	Followings: IUser[];
+	Followers: IUser[];
+}
+
 interface IinitialState {
 	isLoggedIn: boolean; // 로그인 여부
 	isLoggingOut: boolean; // 로그아웃 시도중
@@ -16,7 +25,7 @@ interface IinitialState {
 	isSignedUp: boolean; // 회원가입 성공
 	isSigningUp: boolean; // 회원가입 시도중
 	signUpErrorReason: string; // 회원가입 실패 사유
-	me: any; // 내 정보
+	me: IUser | null; // 내 정보
 	followingList: any; // 팔로잉 리스트
 	followerList: any; // 팔로워 리스트
 	userInfo: any; // 남의 정보
@@ -58,7 +67,7 @@ const userSlice = createSlice({
 			state.isLoggedIn = false;
 			state.me = null;
 		},
-		LOG_OUT_SUCCESS: (state) => state,
+		LOG_OUT_SUCCESS: (state) => {},
 		LOG_OUT_FAILURE: (state) => state,
 		SIGN_UP_REQUEST: (state) => state,
 		SIGN_UP_SUCCESS: (state) => state,
@@ -68,4 +77,9 @@ const userSlice = createSlice({
 		LOAD_USER_FAILURE: (state) => state,
 	},
 });
+
+export const {
+	LOG_IN_SUCCESS,
+	LOG_OUT_REQUEST: logoutAction,
+} = userSlice.actions;
 export default userSlice.reducer;

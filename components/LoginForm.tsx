@@ -3,14 +3,15 @@ import { Button, Form, Input } from "antd";
 import Link from "next/link";
 import styled from "styled-components";
 import useInput from "../hooks/useInput";
+import { useDispatch } from "react-redux";
+import { LOG_IN_SUCCESS } from "../reducers/user";
 
-interface ILoginFormProp {
-	setIsLoggedIn?: (value: boolean) => void;
-}
+interface ILoginFormProp {}
 
-function LoginForm({ setIsLoggedIn }: ILoginFormProp) {
+function LoginForm({}: ILoginFormProp) {
 	const [id, onChangeId] = useInput("");
 	const [password, onChangePassword] = useInput("");
+	const dispatch = useDispatch();
 	const style = useMemo(
 		() => ({
 			marginTop: 10,
@@ -19,8 +20,7 @@ function LoginForm({ setIsLoggedIn }: ILoginFormProp) {
 	);
 
 	const onSubmitForm = useCallback(() => {
-		console.log(id, password);
-		setIsLoggedIn(true);
+		dispatch(LOG_IN_SUCCESS());
 	}, [id, password]);
 	return (
 		<FromWrapper onFinish={onSubmitForm}>
