@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 export interface Post {
 	id: number;
 	User: {
@@ -17,12 +17,36 @@ export interface Post {
 }
 
 interface IinitialState {
+	addPostLoading: boolean;
+	addPostDone: boolean;
+	addPostError: any;
+	removePostLoading: boolean;
+	removePostDone: boolean;
+	removePostError: any;
+	addCommentLoading: boolean;
+	addCommentDone: boolean;
+	addCommentError: any;
+	loadPostsLoading: boolean;
+	loadPostsDone: boolean;
+	loadPostsError: any;
 	mainPosts: Post[];
 	imagePaths: any;
 	postAdded: boolean;
 }
 
 const initialState: IinitialState = {
+	addPostLoading: false,
+	addPostDone: false,
+	addPostError: null,
+	removePostLoading: false,
+	removePostDone: false,
+	removePostError: null,
+	addCommentLoading: false,
+	addCommentDone: false,
+	addCommentError: null,
+	loadPostsLoading: false,
+	loadPostsDone: false,
+	loadPostsError: null,
 	mainPosts: [
 		{
 			id: 1,
@@ -95,7 +119,28 @@ const postSlice = createSlice({
 		ADD_DUMMY: (state) => {
 			state.mainPosts.unshift(dummyPost);
 		},
+		LOAD_POSTS_REQUEST: (draft) => {
+			draft.loadPostsLoading = true;
+			draft.loadPostsDone = false;
+			draft.loadPostsError = null;
+		},
+		LOAD_POSTS_SUCCESS: (draft, action: PayloadAction<Post[]>) => {
+			draft.loadPostsLoading = false;
+			draft.loadPostsDone = true;
+			draft.mainPosts = action.payload.concat(draft.mainPosts);
+			// draft.hasMorePost = draft.mainPosts.length < 50;
+		},
+		LOAD_POSTS_FAILURE: (draft, action) => {
+			draft.loadPostsLoading = true;
+			draft.loadPostsError = action.payload;
+		},
 	},
 });
-export const { ADD_POST, ADD_DUMMY } = postSlice.actions;
+export const {
+	ADD_POST,
+	ADD_DUMMY,
+	LOAD_POSTS_REQUEST: loadPostsRequestAction,
+	LOAD_POSTS_SUCCESS: loadPostsSuccessAction,
+	LOAD_POSTS_FAILURE: loadPostsFailureAction,
+} = postSlice.actions;
 export default postSlice.reducer;

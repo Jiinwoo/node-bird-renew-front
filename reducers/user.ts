@@ -18,60 +18,100 @@ export interface IUser {
 }
 
 interface IinitialState {
-	isLoggedIn: boolean; // 로그인 여부
-	isLoggingOut: boolean; // 로그아웃 시도중
-	isLoggingIn: boolean; // 로그인 시도중
-	logInErrorReason: string; // 로그인 실패 사유
-	isSignedUp: boolean; // 회원가입 성공
-	isSigningUp: boolean; // 회원가입 시도중
-	signUpErrorReason: string; // 회원가입 실패 사유
-	me: IUser | null; // 내 정보
-	followingList: any; // 팔로잉 리스트
-	followerList: any; // 팔로워 리스트
-	userInfo: any; // 남의 정보
+	logInLoading: boolean; // 로그인 시도중
+	logInDone: boolean;
+	logInError: any;
+	logOutLoading: boolean; // 로그아웃 시도중
+	logOutDone: boolean;
+	logOutError: any;
+	signUpLoading: boolean; // 회원가입 시도중
+	signUpDone: boolean;
+	signUpError: any;
+	changeNicknameLoading: boolean; // 닉네임 변경 시도중
+	changeNicknameDone: boolean;
+	changeNicknameError: any;
+	me: null | IUser;
+	signUpData: any;
+	loginData: any;
 }
 
 const initialState: IinitialState = {
-	isLoggedIn: false, // 로그인 여부
-	isLoggingOut: false, // 로그아웃 시도중
-	isLoggingIn: false, // 로그인 시도중
-	logInErrorReason: "", // 로그인 실패 사유
-	isSignedUp: false, // 회원가입 성공
-	isSigningUp: false, // 회원가입 시도중
-	signUpErrorReason: "", // 회원가입 실패 사유
-	me: null, // 내 정보
-	followingList: [], // 팔로잉 리스트
-	followerList: [], // 팔로워 리스트
-	userInfo: null, // 남의 정보
+	logInLoading: false, // 로그인 시도중
+	logInDone: false,
+	logInError: null,
+	logOutLoading: false, // 로그아웃 시도중
+	logOutDone: false,
+	logOutError: null,
+	signUpLoading: false, // 회원가입 시도중
+	signUpDone: false,
+	signUpError: null,
+	changeNicknameLoading: false, // 닉네임 변경 시도중
+	changeNicknameDone: false,
+	changeNicknameError: null,
+	me: null,
+	signUpData: {},
+	loginData: {},
 };
 
 const userSlice = createSlice({
 	name: "user",
 	initialState,
 	reducers: {
-		LOG_IN_REQUEST: (state) => {
-			state.isLoggingIn = true;
-			state.logInErrorReason = "";
+		LOG_IN_REQUEST: (draft) => {
+			draft.logInLoading = true;
+			draft.logInError = null;
+			draft.logInDone = false;
 		},
-		LOG_IN_SUCCESS: (state) => {
-			state.isLoggedIn = true;
-			state.me = dummyUser;
+		LOG_IN_SUCCESS: (draft) => {
+			draft.logInLoading = false;
+			draft.me = dummyUser;
+			draft.logInDone = true;
 		},
-		LOG_IN_FAILURE: (state, action) => {
-			state.isLoggingIn = false;
-			state.isLoggedIn = false;
-			state.logInErrorReason = action.payload;
-			state.me = null;
+		LOG_IN_FAILURE: (draft, action) => {
+			draft.logInLoading = false;
+			draft.logInError = action.payload;
+			draft.me = null;
 		},
-		LOG_OUT_REQUEST: (state) => {
-			state.isLoggedIn = false;
-			state.me = null;
+		LOG_OUT_REQUEST: (draft) => {
+			draft.logOutLoading = true;
+			draft.logOutError = null;
+			draft.logOutDone = false;
 		},
-		LOG_OUT_SUCCESS: (state) => {},
-		LOG_OUT_FAILURE: (state) => state,
-		SIGN_UP_REQUEST: (state) => state,
-		SIGN_UP_SUCCESS: (state) => state,
-		SIGN_UP_FAILURE: (state) => state,
+		LOG_OUT_SUCCESS: (draft) => {
+			draft.logOutLoading = false;
+			draft.logOutDone = true;
+			draft.me = null;
+		},
+		LOG_OUT_FAILURE: (draft, action) => {
+			draft.logOutLoading = false;
+			draft.logOutError = action.payload;
+		},
+		SIGN_UP_REQUEST: (draft) => {
+			draft.signUpLoading = true;
+			draft.signUpError = null;
+			draft.signUpDone = false;
+		},
+		SIGN_UP_SUCCESS: (draft) => {
+			draft.signUpLoading = false;
+			draft.signUpDone = true;
+		},
+		SIGN_UP_FAILURE: (draft, action) => {
+			draft.signUpLoading = false;
+			draft.signUpError = action.payload;
+		},
+		CHANGE_NICKNAME_REQUEST: (draft) => {
+			draft.changeNicknameLoading = true;
+			draft.changeNicknameError = null;
+			draft.changeNicknameDone = false;
+		},
+		CHANGE_NICKNAME_SUCCESS: (draft) => {
+			draft.changeNicknameLoading = false;
+			draft.changeNicknameDone = true;
+		},
+		CHANGE_NICKNAME_FAILURE: (draft, action) => {
+			draft.changeNicknameLoading = false;
+			draft.changeNicknameError = action.payload;
+		},
 		LOAD_USER_REQUEST: (state) => state,
 		LOAD_USER_SUCCESS: (state) => state,
 		LOAD_USER_FAILURE: (state) => state,
@@ -79,7 +119,14 @@ const userSlice = createSlice({
 });
 
 export const {
-	LOG_IN_SUCCESS,
-	LOG_OUT_REQUEST: logoutAction,
+	LOG_IN_REQUEST: loginRequestAction,
+	LOG_IN_SUCCESS: loginSuccessAction,
+	LOG_IN_FAILURE: loginFailureAction,
+	SIGN_UP_REQUEST: signupRequestAction,
+	SIGN_UP_SUCCESS: signupSuccessAction,
+	SIGN_UP_FAILURE: signupFailureAction,
+	LOG_OUT_REQUEST: logoutRequestAction,
+	LOG_OUT_SUCCESS: logoutSuccessAction,
+	LOG_OUT_FAILURE: logoutFailureAction,
 } = userSlice.actions;
 export default userSlice.reducer;

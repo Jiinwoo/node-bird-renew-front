@@ -14,7 +14,7 @@ const makeStore = () => {
 
 	const store: WithSagaTaskStore = configureStore({
 		reducer: rootReducer,
-		middleware: [] as const,
+		middleware: middleware,
 		devTools: process.env.NODE_ENV !== "production",
 	});
 	store.sagaTask = sagaMiddleware.run(rootSaga);
