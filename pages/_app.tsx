@@ -2,6 +2,7 @@ import React from "react";
 import { AppContext, AppInitialProps, AppProps } from "next/app";
 import "antd/dist/antd.css";
 import Head from "next/head";
+import withReduxSaga from "next-redux-saga";
 
 import AppLayout from "../components/AppLayout";
 import wrapper from "../store/configureStore";
@@ -30,4 +31,4 @@ App.getInitialProps = async ({
 
 	return { pageProps };
 };
-export default wrapper.withRedux(App);
+export default wrapper.withRedux(withReduxSaga(App));
