@@ -4,7 +4,8 @@ import Link from "next/link";
 import styled from "styled-components";
 import useInput from "../hooks/useInput";
 import { useDispatch } from "react-redux";
-import { loginSuccessAction, loginRequestAction } from "../reducers/user";
+import { LOAD_POSTS } from "../reducers/post";
+import { LOG_IN } from "../reducers/user";
 
 interface ILoginFormProp {}
 
@@ -20,8 +21,14 @@ function LoginForm({}: ILoginFormProp) {
 	);
 
 	const onSubmitForm = useCallback(() => {
-		dispatch(loginRequestAction());
+		dispatch(
+			LOG_IN.request({
+				email: "asd",
+				password: "123",
+			}),
+		);
 	}, [id, password]);
+
 	return (
 		<FromWrapper onFinish={onSubmitForm}>
 			<div>

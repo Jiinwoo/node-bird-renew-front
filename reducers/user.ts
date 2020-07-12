@@ -1,5 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Post } from "./post";
+import LoginReqPayLoadDTO from "../api/dto/LoginReqDTO";
 
 const dummyUser = {
 	id: 1,
@@ -57,7 +58,7 @@ const userSlice = createSlice({
 	name: "user",
 	initialState,
 	reducers: {
-		LOG_IN_REQUEST: (draft) => {
+		LOG_IN_REQUEST: (draft, action: LoginReqPayLoadDTO) => {
 			draft.logInLoading = true;
 			draft.logInError = null;
 			draft.logInDone = false;
@@ -118,15 +119,20 @@ const userSlice = createSlice({
 	},
 });
 
-export const {
-	LOG_IN_REQUEST: loginRequestAction,
-	LOG_IN_SUCCESS: loginSuccessAction,
-	LOG_IN_FAILURE: loginFailureAction,
-	SIGN_UP_REQUEST: signupRequestAction,
-	SIGN_UP_SUCCESS: signupSuccessAction,
-	SIGN_UP_FAILURE: signupFailureAction,
-	LOG_OUT_REQUEST: logoutRequestAction,
-	LOG_OUT_SUCCESS: logoutSuccessAction,
-	LOG_OUT_FAILURE: logoutFailureAction,
-} = userSlice.actions;
+export const LOG_IN = {
+	request: userSlice.actions.LOG_IN_REQUEST,
+	success: userSlice.actions.LOG_IN_SUCCESS,
+	failure: userSlice.actions.LOG_IN_FAILURE,
+};
+export const SIGN_UP = {
+	request: userSlice.actions.SIGN_UP_REQUEST,
+	success: userSlice.actions.SIGN_UP_SUCCESS,
+	failure: userSlice.actions.SIGN_UP_FAILURE,
+};
+export const LOG_OUT = {
+	request: userSlice.actions.LOG_OUT_REQUEST,
+	success: userSlice.actions.LOG_OUT_SUCCESS,
+	failure: userSlice.actions.LOG_OUT_FAILURE,
+};
+
 export default userSlice.reducer;

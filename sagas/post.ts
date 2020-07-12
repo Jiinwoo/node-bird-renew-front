@@ -1,24 +1,27 @@
-import { all, delay, fork, put, throttle } from "@redux-saga/core/effects";
+import {
+	all,
+	call,
+	delay,
+	fork,
+	put,
+	take,
+	throttle,
+} from "@redux-saga/core/effects";
 import {
 	loadPostsRequestAction,
 	loadPostsSuccessAction,
 	loadPostsFailureAction,
+	LOAD_POSTS,
 } from "../reducers/post";
+import { loadPostsAPI } from "../api/post";
+import { SagaHelper } from "../util/SagaHelper";
 
-function loadPostsAPI() {}
-
-function* loadPosts() {
-	try {
-		// const result = yield call(loadPostsAPI)
-		yield delay(1000);
-		yield put(loadPostsSuccessAction());
-	} catch (e) {
-		yield put(loadPostsFailureAction(e));
-	}
-}
+const loadPostsSaga = SagaHelper.fetchEntity(LOAD_POSTS, loadPostsAPI);
 
 function* watchLoadPosts() {
-	yield throttle(5000, loadPostsRequestAction, loadPosts);
+	const { ...params } = yield take(LOAD_POSTS.request);
+	console.log("파라미터 : ", params);
+	yield call(loadPostsSaga, params);
 }
 
 export default function* postSaga() {

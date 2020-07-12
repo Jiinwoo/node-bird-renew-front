@@ -119,7 +119,7 @@ const postSlice = createSlice({
 		ADD_DUMMY: (state) => {
 			state.mainPosts.unshift(dummyPost);
 		},
-		LOAD_POSTS_REQUEST: (draft) => {
+		LOAD_POSTS_REQUEST: (draft, action: PayloadAction<number>) => {
 			draft.loadPostsLoading = true;
 			draft.loadPostsDone = false;
 			draft.loadPostsError = null;
@@ -134,8 +134,27 @@ const postSlice = createSlice({
 			draft.loadPostsLoading = true;
 			draft.loadPostsError = action.payload;
 		},
+		ADD_POST_REQUEST: (draft) => {
+			draft.addPostLoading = true;
+			draft.addPostDone = false;
+			draft.addPostError = null;
+		},
+		ADD_POST_SUCCESS: (draft, action) => {
+			draft.addPostLoading = false;
+			draft.addPostDone = true;
+			draft.mainPosts.unshift(action.payload);
+		},
+		ADD_POST_FAILURE: (draft, action) => {
+			draft.addPostLoading = true;
+			draft.addPostError = action.payload;
+		},
 	},
 });
+export const LOAD_POSTS = {
+	request: postSlice.actions.LOAD_POSTS_REQUEST,
+	success: postSlice.actions.LOAD_POSTS_SUCCESS,
+	failure: postSlice.actions.LOAD_POSTS_FAILURE,
+};
 export const {
 	ADD_POST,
 	ADD_DUMMY,
